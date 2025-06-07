@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>陳思叡的自介網站</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: linear-gradient(to bottom, #111827, #000);
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      overflow-x: hidden;
+      background-size: 400% 400%;
+      animation: backgroundShift 20s ease infinite;
+    }
+    @keyframes backgroundShift {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+    h2 {
+      font-size: 2rem;
+    }
+    p {
+      color: #ccc;
+      font-size: 1.1rem;
+    }
+    .card {
+      background: #1f2937;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 15px #00000088;
+      margin: 1.5rem auto;
+      max-width: 800px;
+      cursor: pointer;
+    }
+    .card.large {
+      padding: 3rem;
+      font-size: 1.25rem;
+    }
+    .hidden {
+      display: none;
+    }
+    .button {
+      background-color: #6366f1;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #818cf8;
+    }
+    .game-actions {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+    }
+    canvas {
+      background-color: #fff;
+      border-radius: 1rem;
+      margin-top: 1rem;
+      box-shadow: 0 0 10px #000000aa;
+    }
+    .dog-carousel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .dog-carousel img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 1rem;
+      box-shadow: 0 0 10px #000000aa;
+    }
+    .carousel-controls {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="main">
+    <h1>嗨，我是陳思叡✨</h1>
+    <p>歡迎來到我的個人網站，這裡會展示我的背景與經歷！</p>
+
+    <div class="card" onclick="showProfile()">
+      <h2>關於我</h2>
+      <p>點我看個人簡介、生日、個性與優點 🧠</p>
+    </div>
+
+    <div class="card" onclick="showDetails()">
+      <h2>更多介紹</h2>
+      <p>點我看技能、興趣延伸、價值觀等詳細資訊 👀</p>
+    </div>
+
+    <div class="card" onclick="showDog()">
+      <h2>我家的狗 🐶</h2>
+      <p>點我看我家的可愛狗狗照片 🐕</p>
+    </div>
+
+    <div class="card" onclick="showGame()">
+      <h2>小遊戲 🎮</h2>
+      <p>點我來玩一個簡單的小遊戲！</p>
+    </div>
+  </div>
+
+  <div id="profile" class="hidden">
+    <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">關於我 ✨</h2>
+    <div class="card large">
+      <p>🎂 生日：2008 年 6 月 9 日</p>
+      <p>😎 個性：文靜、勤奮、老實</p>
+      <p>👍 優點：動手能力強、能主動思考和解決問題、學東西很快</p>
+<div style="text-align: center; margin-top: 1rem;">
+  <button class="button" onclick="toggleMoreStrengths()">查看更多優點 🚀</button>
+  <div id="moreStrengths" class="hidden" style="margin-top: 1rem;">
+    <div style="display: inline-block; text-align: left;">
+      <!-- 優點內容會被 JS 塞進來 -->
+    </div>
+  </div>
+</div>
+
+
+    </div>
+    <button class="button" onclick="showMain()">🔙 返回首頁</button>
+  </div>
+
+  <div id="details" class="hidden">
+    <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">更多介紹 🧩</h2>
+    <div class="card large">
+      <p>📚 技能：會Python、JavaScript、C/C++</p>
+      <p>🎯 興趣：bass</p>
+    </div>
+    <button class="button" onclick="showMain()">🔙 返回首頁</button>
+  </div>
+
+  <div id="game" class="hidden">
+    <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">小遊戲 🎯</h2>
+    <div class="card large">
+      <p>試試你的反應速度！在 20 秒內點擊方塊看你能得幾分</p>
+      <p id="scoreDisplay">得分：0</p>
+      <p id="timerDisplay">剩餘時間：20 秒</p>
+      <canvas id="gameCanvas" width="300" height="300"></canvas>
+      <div class="game-actions">
+        <button class="button" onclick="startGame()">🔁 重新開始</button>
+      </div>
+    </div>
+    <button class="button" onclick="showMain()">🔙 返回首頁</button>
+  </div>
+
+  <div id="dog" class="hidden">
+    <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">我家的狗 🐶</h2>
+    <div class="card large dog-carousel">
+      <img id="dogImage" src="https://images.unsplash.com/photo-1601758123927-1964fe88eedd" alt="Dog" draggable="false">
+      <div class="carousel-controls">
+        <button class="button" onclick="prevDog()">⬅️ 上一張</button>
+        <span id="dogIndicator">1 / 3</span>
+        <button class="button" onclick="nextDog()">➡️ 下一張</button>
+      </div>
+    </div>
+    <button class="button" onclick="showMain()">🔙 返回首頁</button>
+  </div>
+
+  <script>
+    function showMain() {
+      hideAll();
+      document.getElementById("main").classList.remove("hidden");
+    }
+
+    function showProfile() {
+      hideAll();
+      document.getElementById("profile")?.classList.remove("hidden");
+    }
+
+    function showDetails() {
+      hideAll();
+      document.getElementById("details")?.classList.remove("hidden");
+    }
+
+    function showGame() {
+      hideAll();
+      document.getElementById("game")?.classList.remove("hidden");
+      startGame?.();
+    }
+
+    function hideAll() {
+      document.getElementById("main")?.classList.add("hidden");
+      document.getElementById("profile")?.classList.add("hidden");
+      document.getElementById("details")?.classList.add("hidden");
+      document.getElementById("dog")?.classList.add("hidden");
+      document.getElementById("game")?.classList.add("hidden");
+    }
+
+    let score = 0;
+    let timeLeft = 20;
+    let timerInterval;
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas?.getContext("2d");
+    let box = { x: 100, y: 100, size: 50 };
+
+    function randomizeBox() {
+      box.x = Math.floor(Math.random() * (canvas.width - box.size));
+      box.y = Math.floor(Math.random() * (canvas.height - box.size));
+    }
+
+    function drawBox() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#6366f1";
+      ctx.fillRect(box.x, box.y, box.size, box.size);
+    }
+
+    function startGame() {
+      score = 0;
+      timeLeft = 20;
+      document.getElementById("scoreDisplay").textContent = "得分：0";
+      document.getElementById("timerDisplay").textContent = "剩餘時間：20 秒";
+      randomizeBox();
+      drawBox();
+      clearInterval(timerInterval);
+
+      canvas.onclick = function (e) {
+        if (timeLeft <= 0) return;
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        if (x >= box.x && x <= box.x + box.size && y >= box.y && y <= box.y + box.size) {
+          score++;
+          document.getElementById("scoreDisplay").textContent = `得分：${score}`;
+          randomizeBox();
+          drawBox();
+        }
+      };
+
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timerDisplay").textContent = `剩餘時間：${timeLeft} 秒`;
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          canvas.onclick = null;
+          setTimeout(() => {
+            alert(`🎉 恭喜獲得 ${score} 分！`);
+          }, 100);
+        }
+      }, 1000);
+    }
+
+    const dogImages = [
+      "1.jpg",
+      "2.jpg",
+      "3.jpg"
+    ];
+    let currentDog = 0;
+    let dogTimer;
+
+    function updateDogImage() {
+      const img = document.getElementById("dogImage");
+      const indicator = document.getElementById("dogIndicator");
+      img.src = dogImages[currentDog];
+      indicator.textContent = `${currentDog + 1} / ${dogImages.length}`;
+    }
+
+    function startDogCarousel() {
+      clearInterval(dogTimer);
+      dogTimer = setInterval(() => {
+        currentDog = (currentDog + 1) % dogImages.length;
+        updateDogImage();
+      }, 15000);
+    }
+
+    function prevDog() {
+      currentDog = (currentDog - 1 + dogImages.length) % dogImages.length;
+      updateDogImage();
+    }
+
+    function nextDog() {
+      currentDog = (currentDog + 1) % dogImages.length;
+      updateDogImage();
+    }
+
+    function showDog() {
+      hideAll();
+      document.getElementById("dog").classList.remove("hidden");
+      updateDogImage();
+      startDogCarousel();
+    }
+function toggleMoreStrengths() {
+  const container = document.getElementById("moreStrengths");
+  const strengths = [
+    "✅ 喜歡追技術趨勢", "✅ 做事有耐心", "✅ 喜歡挑戰自己", "✅ 邏輯思維佳", "✅ 團隊合作良好",
+    "✅ 擅長獨立作業", "✅ 熱愛解決問題", "✅ 記憶力強", "✅ 有責任感", "✅ 溝通能力不錯",
+    "✅ 時間管理能力佳", "✅ 願意主動幫忙", "✅ 思緒清晰", "✅ 注重細節", "✅ 不怕犯錯",
+    "✅ 能快速適應新環境", "✅ 善於分析", "✅ 做事有效率", "✅ 有領導潛力", "✅ 學習資源利用率高",
+    "✅ 喜歡探索新技術", "✅ 喜歡創造新點子", "✅ 能接受批評", "✅ 情緒穩定", "✅ 懂得感恩",
+    "✅ 有自律能力", "✅ 善於規劃", "✅ 動手能力強", "✅ 有美感", "✅ 喜歡幫別人debug",
+    "✅ 幽默風趣", "✅ 自我要求高", "✅ 對程式有熱情", "✅ 肯花時間鑽研", "✅ 敢表達想法",
+    "✅ 做事有條理", "✅ 懂得取捨", "✅ 不輕易放棄", "✅ 抗壓性高", "✅ 親和力強",
+    "✅ 腦洞大", "✅ 多才多藝", "✅ 擅長資訊搜尋", "✅ 具備工程思維", "✅ 細心檢查每一行code",
+    "✅ 願意幫助新手", "✅ 具備反思能力", "✅ 有好奇心", "✅ 樂觀正向", "✅ 懂得時間分配",
+    "✅ 喜歡學習新語言", "✅ 懂得效率優化", "✅ 有責任心", "✅ 懂得迭代改進", "✅ 邏輯推理強",
+    "✅ 喜歡記筆記", "✅ 喜歡讀技術書", "✅ 看source code當娛樂", "✅ 有 API 設計概念", "✅ 喜歡 Hackathon",
+    "✅ 有 Git 習慣", "✅ 喜歡寫 README", "✅ 有做 side project 經驗", "✅ 懂 UI/UX 基礎", "✅ 會幫網頁加動畫",
+    "✅ 懂開源精神", "✅ 對未來有規劃", "✅ 會抓使用者需求", "✅ 對自己負責", "✅ 擅長拆解任務",
+    "✅ 能主動請教問題", "✅ 會備份code", "✅ 會寫單元測試", "✅ 對 DevOps 有初步了解", "✅ 懂 API 串接",
+    "✅ 喜歡用白板寫流程", "✅ 懂 CLI 工具", "✅ 喜歡用 Notion/Obsidian", "✅ 寫文件不嫌麻煩", "✅ 有 code review 經驗",
+    "✅ 可以手刻動畫", "✅ 愛逛 GitHub", "✅ 對設計也有品味", "✅ 會切圖", "✅ 喜歡試框架",
+    "✅ 有 debug 優化能力", "✅ 有架 server 經驗", "✅ 會 deploy 靜態網頁", "✅ 對安全性有意識", "✅ 懂得 refactor",
+    "✅ 喜歡學演算法", "✅ 會用 Git Flow", "✅ 喜歡用快捷鍵", "✅ 懂 keyboard shortcut 美德", "✅ 有 Coding Style",
+    "✅ 喜歡記錯誤訊息", "✅ 會寫 commit message", "✅ 學習速度快", "✅ 喜歡觀察別人怎麼寫 code", "✅ 會畫資料流程圖"
+  ];
+
+  if (container.classList.contains("hidden")) {
+    container.querySelector('div').innerHTML = strengths.join('<br>');
+
+    container.classList.remove("hidden");
+  } else {
+    container.classList.add("hidden");
+    container.innerHTML = "";
+  }
+}
+  </script>
+</body>
+</html>
